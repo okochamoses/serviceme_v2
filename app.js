@@ -12,6 +12,7 @@ require("./config/db");
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authenticationRouter = require('./routes/authentication');
+const providerRouter = require('./routes/provider');
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/v2/auth', authenticationRouter);
+app.use('/api/v2/providers', providerRouter);
 
 module.exports = app;

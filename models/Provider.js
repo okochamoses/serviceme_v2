@@ -10,6 +10,10 @@ const providerSchema = new mongoose.Schema({
       type: Boolean,
       default: true
     },
+    businesses: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "businesses"
+    }]
 })
 
 module.exports = mongoose.model("providers", providerSchema);

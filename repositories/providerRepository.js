@@ -6,7 +6,7 @@ const findByPhone = async phone => {
 };
 
 const findById = async id => {
-  const provider = await Provider.findById(id);
+  const provider = await (await Provider.findById(id).populate("businesses").exec());
   return provider;
 };
 
@@ -26,9 +26,9 @@ const save = async (provider) => {
   return savedProvider;
 };
 
-const update = async (id, body) => {
-  const provider = await Provider.findOneAndUpdate({ _id: id }, { $set: body }, { new: true });
-  return provider;
+const update = async (provider) => {
+  const updatedProvider = await provider.save();
+  return updatedProvider;
 };
 
 module.exports = {
