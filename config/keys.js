@@ -14,5 +14,7 @@ module.exports = {
   JWT_SECRET_ADMIN: process.env.JWT_SECRET_ADMIN,
   JWT_EXPIRY_TOKEN: parseInt(process.env.JWT_TOKEN_EXPIRY, 10),
 
-  MAPS_API_KEY: process.env.MAPS_API_KEY
+  MAPS_API_KEY: process.env.MAPS_API_KEY,
+
+  SESSION_TIMEOUT: parseInt(process.env.SESSION_TIMEOUT, 10),
 };

@@ -5,7 +5,7 @@ const { DB_HOST, DB_NAME, DB_PASS, DB_USER } = require("./keys");
 const url = `mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}`;
 
 mongoose
-  .connect(url, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
+  .connect(url, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false, useUnifiedTopology: true })
   .then(() => {
     logger.info("Database connection established");
   })
