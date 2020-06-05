@@ -13,6 +13,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authenticationRouter = require('./routes/authentication');
 const providerRouter = require('./routes/provider');
+const locationRouter = require('./routes/locations');
 
 const {processSessionToken} = require("./middleware/authMiddleware")
 
@@ -27,5 +28,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/v2/auth', authenticationRouter);
 app.use('/api/v2/providers', processSessionToken, providerRouter);
+app.use('/api/v2/locations', locationRouter);
 
 module.exports = app;

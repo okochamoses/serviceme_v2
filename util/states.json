@@ -1,6 +1,7 @@
 [
     {
         "name": "Abia",
+        "code": "AB",
         "lgas": [
             "Aba North",
             "Aba South",
@@ -23,6 +24,7 @@
     },
     {
         "name": "Adamawa",
+        "code": "AD",
         "lgas": [
             "Demsa",
             "Fufure",
@@ -49,6 +51,7 @@
     },
     {
         "name": "AkwaIbom",
+        "code": "AK",
         "lgas": [
             "Abak",
             "Eastern Obolo",
@@ -85,32 +88,7 @@
     },
     {
         "name": "Anambra",
-        "lgas": [
-            "Aguata",
-            "Anambra East",
-            "Anambra West",
-            "Anaocha",
-            "Awka North",
-            "Awka South",
-            "Ayamelum",
-            "Dunukofia",
-            "Ekwusigo",
-            "Idemili North",
-            "Idemili South",
-            "Ihiala",
-            "Njikoka",
-            "Nnewi North",
-            "Nnewi South",
-            "Ogbaru",
-            "Onitsha North",
-            "Onitsha South",
-            "Orumba North",
-            "Orumba South",
-            "Oyi"
-        ]
-    },
-    {
-        "name": "Anambra",
+        "code": "AN",
         "lgas": [
             "Aguata",
             "Anambra East",
@@ -137,6 +115,7 @@
     },
     {
         "name": "Bauchi",
+        "code": "BA",
         "lgas": [
             "Alkaleri",
             "Bauchi",
@@ -162,6 +141,7 @@
     },
     {
         "name": "Bayelsa",
+        "code": "BY",
         "lgas": [
             "Brass",
             "Ekeremor",
@@ -175,6 +155,7 @@
     },
     {
         "name": "Benue",
+        "code": "BE",
         "lgas": [
             "Agatu",
             "Apa",
@@ -203,6 +184,7 @@
     },
     {
         "name": "Borno",
+        "code": "BO",
         "lgas": [
             "Abadam",
             "Askira-Uba",
@@ -235,6 +217,7 @@
     },
     {
         "name": "Cross River",
+        "code": "CR",
         "lgas": [
             "Abi",
             "Akamkpa",
@@ -258,6 +241,7 @@
     },
     {
         "name": "Delta",
+        "code": "DE",
         "lgas": [
             "Aniocha North",
             "Aniocha South",
@@ -288,6 +272,7 @@
     },
     {
         "name": "Ebonyi",
+        "code": "EB",
         "lgas": [
             "Abakaliki",
             "Afikpo North",
@@ -306,6 +291,7 @@
     },
     {
         "name": "Edo",
+        "code": "ED",
         "lgas": [
             "Akoko-Edo",
             "Egor",
@@ -329,6 +315,7 @@
     },
     {
         "name": "Ekiti",
+        "code": "EK",
         "lgas": [
             "Ado Ekiti",
             "Efon",
@@ -350,6 +337,7 @@
     },
     {
         "name": "Rivers",
+        "code": "RI",
         "lgas": [
             "Port Harcourt",
             "Obio-Akpor",
@@ -378,6 +366,7 @@
     },
     {
         "name": "Enugu",
+        "code": "EN",
         "lgas": [
             "Aninri",
             "Awgu",
@@ -400,6 +389,7 @@
     },
     {
         "name": "Abuja",
+        "code": "FC",
         "lgas": [
             "Abaji",
             "Bwari",
@@ -411,6 +401,7 @@
     },
     {
         "name": "Gombe",
+        "code": "GO",
         "lgas": [
             "Akko",
             "Balanga",
@@ -427,6 +418,7 @@
     },
     {
         "name": "Imo",
+        "code": "IM",
         "lgas": [
             "Aboh Mbaise",
             "Ahiazu Mbaise",
@@ -459,6 +451,7 @@
     },
     {
         "name": "Jigawa",
+        "code": "JI",
         "lgas": [
             "Auyo",
             "Babura",
@@ -491,6 +484,7 @@
     },
     {
         "name": "Kaduna",
+        "code": "KD",
         "lgas": [
             "Birnin Gwari",
             "Chikun",
@@ -519,6 +513,7 @@
     },
     {
         "name": "Kano",
+        "code": "KN",
         "lgas": [
             "Ajingi",
             "Albasu",
@@ -568,6 +563,7 @@
     },
     {
         "name": "Katsina",
+        "code": "KT",
         "lgas": [
             "Bakori",
             "Batagarawa",
@@ -607,6 +603,7 @@
     },
     {
         "name": "Kebbi",
+        "code": "KE",
         "lgas": [
             "Aleiro",
             "Arewa Dandi",
@@ -633,6 +630,7 @@
     },
     {
         "name": "Kogi",
+        "code": "KO",
         "lgas": [
             "Adavi",
             "Ajaokuta",
@@ -659,6 +657,7 @@
     },
     {
         "name": "Kwara",
+        "code": "KW",
         "lgas": [
             "Asa",
             "Baruten",
@@ -680,6 +679,7 @@
     },
     {
         "name": "Lagos",
+        "code": "LA",
         "lgas": [
             "Agege",
             "Ajeromi-Ifelodun",
@@ -705,6 +705,7 @@
     },
     {
         "name": "Nassarawa",
+        "code": "NA",
         "lgas": [
             "Akwanga",
             "Awe",
@@ -723,6 +724,7 @@
     },
     {
         "name": "Niger",
+        "code": "NI",
         "lgas": [
             "Agaie",
             "Agwara",
@@ -753,6 +755,7 @@
     },
     {
         "name": "Ogun",
+        "code": "OG",
         "lgas": [
             "Abeokuta North",
             "Abeokuta South",
@@ -778,6 +781,7 @@
     },
     {
         "name": "Ondo",
+        "code": "ON",
         "lgas": [
             "Akoko North-East",
             "Akoko North-West",
@@ -801,6 +805,7 @@
     },
     {
         "name": "Osun",
+        "code": "OS",
         "lgas": [
             "Atakunmosa East",
             "Atakunmosa West",
@@ -836,6 +841,7 @@
     },
     {
         "name": "Oyo",
+        "code": "OY",
         "lgas": [
             "Afijio",
             "Akinyele",
@@ -874,6 +880,7 @@
     },
     {
         "name": "Plateau",
+        "code": "PL",
         "lgas": [
             "Bokkos",
             "Barkin Ladi",
@@ -896,6 +903,7 @@
     },
     {
         "name": "Sokoto",
+        "code": "SO",
         "lgas": [
             "Binji",
             "Bodinga",
@@ -924,6 +932,7 @@
     },
     {
         "name": "Taraba",
+        "code": "TA",
         "lgas": [
             "Ardo Kola",
             "Bali",
@@ -945,6 +954,7 @@
     },
     {
         "name": "Yobe",
+        "code": "YO",
         "lgas": [
             "Bade",
             "Bursari",
@@ -967,6 +977,7 @@
     },
     {
         "name": "Zamfara",
+        "code": "ZA",
         "lgas": [
             "Anka",
             "Bakura",
