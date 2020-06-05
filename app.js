@@ -14,6 +14,8 @@ const usersRouter = require('./routes/users');
 const authenticationRouter = require('./routes/authentication');
 const providerRouter = require('./routes/provider');
 
+const {processSessionToken} = require("./middleware/authMiddleware")
+
 const app = express();
 
 app.use(morgan("combined", { stream: logger.stream }));
@@ -24,6 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/v2/auth', authenticationRouter);
-app.use('/api/v2/providers', providerRouter);
+app.use('/api/v2/providers', processSessionToken, providerRouter);
 
 module.exports = app;

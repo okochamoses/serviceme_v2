@@ -46,3 +46,11 @@ exports.addBusiness = async (req, res) => {
         logger.error(error.message);
     }
 }
+
+exports.addImages = async (req, res) => {
+    try {
+        return res.json("Method not implemented")
+    } catch (error) {
+        logger.error(error.message);
+    }
+}

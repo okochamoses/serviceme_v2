@@ -25,7 +25,7 @@ exports.authenticateProvider = async (req, res) => {
         }
 
         // Generate token
-        const token = encryption.generateToken({ email: provider.email, id: provider._id}, "provider")
+        const token = encryption.generateToken({ email: provider.email, id: provider._id, type: "provider"}, "provider")
 
         // Save token to session
         sessionRepository.save({sessionId: token, userId: provider._id});

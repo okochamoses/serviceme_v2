@@ -35,4 +35,15 @@ const generateToken = (data, type = null) => {
     return jwt.sign(data, secret);
 };
 
-module.exports = { hash, comparePassword, generatePassword, generateToken };
+const decodeToken = (token, type = null) => {
+    try {
+        const secret = (type === "admin" ? JWT_SECRET_ADMIN : JWT_SECRET) || "incredibleMagma";
+        console.log(token)
+        return jwt.verify(token, secret);
+    } catch (error) {
+        console.log(error)
+        return "Authentication failed"
+    }
+}
+
+module.exports = { hash, comparePassword, generatePassword, generateToken, decodeToken };

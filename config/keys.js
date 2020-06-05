@@ -17,4 +17,8 @@ module.exports = {
   MAPS_API_KEY: process.env.MAPS_API_KEY,
 
   SESSION_TIMEOUT: parseInt(process.env.SESSION_TIMEOUT, 10),
+
+  CLOUD_NAME: process.env.CLOUD_NAME,
+  CLOUD_API_KEY: process.env.CLOUD_API_KEY,
+  CLOUD_API_SECRET: process.env.CLOUD_API_SECRET,
 };
