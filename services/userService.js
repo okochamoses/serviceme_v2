@@ -57,6 +57,32 @@ exports.registerProvider = async (req, res) => {
     }
 }
 
+exports.changeProviderPassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword} = req.body;
+        console.log(req.user)
+        const {email} = req.user;
+        const provider = await providerRepository.findByEmail(email);
+        if (provider === null) {
+            return res.json(new ServiceResponse(ResponseCode.AUTH_FAILURE, "Oops! Something went wrong. Please try again"))
+        }
+        if (!encryption.comparePassword(oldPassword, provider.password)) {
+            return res.json(new ServiceResponse(ResponseCode.AUTH_FAILURE, "You entered the wrong password"))
+        }
+
+        const password = encryption.hash(newPassword);
+        provider.password = password;
+        const updatedProvider = await providerRepository.update(provider);
+        console.log(updatedProvider, password);
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, "Your password has been changed successfully"))
+    } catch (error) {
+        logger.error(error.message)
+        console.log(error)
+        return res.json(new ServiceResponse(ResponseCode.FAILURE, ResponseMessage.FAILURE));
+    }
+}
+
 exports.logout = async (req, res) => {
     try {
         const { body } = req;
