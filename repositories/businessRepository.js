@@ -16,6 +16,9 @@ const findAll = async () => {
 };
 
 const save = async (business) => {
+  if(business._id !== null || business._id !== undefined) {
+    return await business.save();
+  }
   const businessModel = new Business(business);
   const savedBusiness = await businessModel.save();
   return savedBusiness;

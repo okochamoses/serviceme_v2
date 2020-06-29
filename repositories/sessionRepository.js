@@ -23,8 +23,9 @@ const save = async (session) => {
 const update = async (userId) => {
     const existingSession = await findByUserId(userId);
     if (existingSession !== null) {
-        existingSession.sessionEnd = new Date() + (30 * 60 * 1000)
+        existingSession.sessionEnd = Date.now() + (30 * 60 * 1000)
         return await existingSession.save();
+
     }
 };
 

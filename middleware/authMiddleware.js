@@ -15,7 +15,7 @@ exports.processSessionToken = async (req, res, next) => {
         const session = await sessionRepository.findById(token);
         if (session.sessionEnd > new Date()) {
             await sessionRepository.update(session.userId);
-            res.user = decoded
+            req.user = decoded
             return next();
         }
     }

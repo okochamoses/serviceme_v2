@@ -1,38 +1,51 @@
 const providerRepository = require("../repositories/providerRepository")
-const {validateBusiness} = require("../validation/providerValidation")
+const { validateBusiness } = require("../validation/providerValidation")
 const businessRepository = require("../repositories/businessRepository")
 const categoryRepository = require("../repositories/categoryRepository")
+const imageService = require("./imageService")
 const ServiceResponse = require("../util/ServiceResponse")
 const { ResponseCode, ResponseMessage } = require("../util/Responses")
 const logger = require("../config/logger")
+
+exports.getProfile = async (req, res) => {
+    try {
+        console.log(req.user)
+        const provider = await providerRepository.findById(req.user.id);
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, provider))
+    } catch (error) {
+        logger.error("An Error has occured: " + error.message);
+        logger.error(error);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
+    }
+}
 
 exports.addBusiness = async (req, res) => {
     try {
         // validate business request body
         const validationError = validateBusiness(req.body);
-        const {businessName, streetAddress, state, lga, landmark,providerId, categoryId} = req.body;
-        if(validationError) {
+        const { businessName, streetAddress, state, lga, landmark, providerId, categoryId } = req.body;
+        if (validationError) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, validationError))
         }
         // Check if user already has business name on platform
         const provider = await providerRepository.findById(providerId);
-        if(provider === null) {
+        if (provider === null) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Provider does not exist"));
         }
 
         provider.businesses.forEach(business => {
-            if(business.businessName === businessName) {
+            if (business.businessName === businessName) {
                 return res.json(new ServiceResponse(ResponseCode.FAILURE, "You already have this business name on your profile"));
             }
         })
 
         // Add category to business
         const category = await categoryRepository.findById(categoryId)
-        if(category === null) {
-            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Please enater a valid category"));
+        if (category === null) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Please enter a valid category"));
         }
-        
-        const business = {businessName, streetAddress, state, lga, landmark, category};
+
+        const business = { businessName, streetAddress, state, lga, landmark, category };
 
         const savedBusiness = await businessRepository.save(business);
 
@@ -43,14 +56,83 @@ exports.addBusiness = async (req, res) => {
         // return messge
         return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedProvider))
     } catch (error) {
-        logger.error(error.message);
+        logger.error("An Error has occured: " + error.message);
+        logger.error(error);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
+    }
+}
+
+exports.updateBusiness = async (req, res) => {
+    try {
+        // const validationError = validateBusiness(req.body);
+        // const {businessName, streetAddress, state, lga, landmark,providerId, categoryId} = req.body;
+        const { businessId } = req.params;
+
+        const provider = await providerRepository.findById(req.user.id);
+        let isProviderBusiness = false;
+        provider.businesses.forEach(business => {
+            if (business.id === businessId) {
+                isProviderBusiness = true;
+            }
+        })
+
+        if (!isProviderBusiness) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Oops! This business does not belong to the logged in provider"));
+        }
+
+        const business = await businessRepository.findById(businessId);
+        if (business === null) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Sorry, the business you're trying to update does not exist"));
+        }
+
+        const updatedBusiness = await businessRepository.update(businessId, req.body);
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedBusiness))
+    } catch (error) {
+        logger.error("An Error has occured: " + error.message);
+        logger.error(error);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
+    }
+}
+
+exports.updateProfile = async (req, res) => {
+    try {
+        const provider = await providerRepository.findById(req.user.id);
+
+        const updatedProvider = await providerRepository.update(req.user.id, req.body);
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedProvider))
+    } catch (error) {
+        logger.error("An Error has occured: " + error.message);
+        logger.error(error);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
     }
 }
 
 exports.addImages = async (req, res) => {
     try {
-        return res.json("Method not implemented")
+        const { image } = req.body;
+        const { businessId } = req.params;
+
+        // Validate business
+        const business = await businessRepository.findById(businessId);
+        if (business === null) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Business does not exist"))
+        }
+
+        const imageDetails = await imageService.uploadImage(image); // Store image to online db
+
+        if (imageDetails.secure_url === undefined) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Oops! There was an error saving your image. Please try again"))
+        }
+
+        business.images.push(imageDetails.secure_url);
+        const updatedBusiness = await businessRepository.save(business);
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedBusiness))
     } catch (error) {
-        logger.error(error.message);
+        logger.error("An Error has occured: " + error.message);
+        logger.error(error);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
     }
 }
