@@ -33,6 +33,7 @@ const update = async (id, body) => {
 
 module.exports = {
   findByName,
+  findByCode,
   findById,
   findAll,
   save,

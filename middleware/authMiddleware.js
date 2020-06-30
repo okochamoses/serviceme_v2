@@ -1,13 +1,15 @@
 const encryptionService = require("../util/hashing");
 const sessionRepository = require("../repositories/sessionRepository")
+const ServiceResponse  = require("../util/ServiceResponse")
+const {ResponseCode, ResponseMessage} = require("../util/Responses")
 
 exports.processSessionToken = async (req, res, next) => {
     let token = req.get("Authorization");
-    token = token.replace("Bearer ", ""); // remove
 
     if (token === undefined) {
-        return res.json({ code: 20, description: "Please pass a sessionId" })
+        return res.json({ code: ResponseCode.AUTH_FAILURE, description: "Please pass a sessionId" })
     }
+    token = token.replace("Bearer ", ""); // remove
 
     const decoded = encryptionService.decodeToken(token);
 
@@ -19,5 +21,5 @@ exports.processSessionToken = async (req, res, next) => {
             return next();
         }
     }
-    return res.json({ code: 20, description: "Authentication failed" })
+    return res.json({ code: ResponseCode.AUTH_FAILURE, description: ResponseMessage.AUTH_FAILURE })
 };

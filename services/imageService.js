@@ -10,11 +10,11 @@ cloudinary.config({
 
 // cloudinary.utils.api_sign_request(params_to_sign, api_secret)
 
-exports.uploadImage = async (base64Image) => {
+exports.uploadImage = async (base64Image, directory) => {
     const uniqueFilename = new Date().toISOString();
     try {
         return await cloudinary.v2.uploader.upload(base64Image,
-            { public_id: `business/${uniqueFilename}`, tags: `business` }, // directory and tags are optional
+            { public_id: `${directory}/${uniqueFilename}`, tags: directory }, // directory and tags are optional
             async (err, image) => {
                 if (err) {
                     console.log(err)

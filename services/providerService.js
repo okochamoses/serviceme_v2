@@ -57,7 +57,6 @@ exports.addBusiness = async (req, res) => {
         return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedProvider))
     } catch (error) {
         logger.error("An Error has occured: " + error.message);
-        logger.error(error);
         return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
     }
 }
@@ -120,7 +119,7 @@ exports.addImages = async (req, res) => {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Business does not exist"))
         }
 
-        const imageDetails = await imageService.uploadImage(image); // Store image to online db
+        const imageDetails = await imageService.uploadImage(image, "business"); // Store image to online db
 
         if (imageDetails.secure_url === undefined) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Oops! There was an error saving your image. Please try again"))
