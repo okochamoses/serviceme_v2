@@ -7,8 +7,8 @@ router.post("/provider/register", userService.registerProvider);
 router.post("/provider/change-password", processSessionToken, userService.changeProviderPassword);
 router.post("/provider/logout", userService.logout);
 
-router.post("/customer/login", () => { console.log("Implementation not done") });
-router.post("/customer/register", () => { console.log("Implementation not done") });
+router.post("/customer/login", userService.customerLogin);
+router.post("/customer/register", userService.registerCustomer);
 router.post("/customer/logout", () => { console.log("Implementation not done") });
 
 router.post("/admin/login", () => { console.log("Implementation not done") });

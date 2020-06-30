@@ -38,7 +38,6 @@ const generateToken = (data, type = null) => {
 const decodeToken = (token, type = null) => {
     try {
         const secret = (type === "admin" ? JWT_SECRET_ADMIN : JWT_SECRET) || "incredibleMagma";
-        console.log(token)
         return jwt.verify(token, secret);
     } catch (error) {
         console.log(error)
