@@ -1,4 +1,5 @@
 const Business = require("../models/Business");
+const categoryRepository = require("./categoryRepository");
 
 const findByName = async businessName => {
   const business = await Business.findOne({ businessName });
@@ -14,6 +15,14 @@ const findAll = async () => {
   const businesses = await Business.find();
   return businesses;
 };
+
+const findByCategoryAndStateAndLga = async (categoryId, state, lga) => {
+  const document = {category: categoryId};
+  state !== undefined ? document.state = state : null;
+  lga !== undefined ? document.lga = lga : null;
+  const businesses = await Business.find(document);
+  return businesses;
+}
 
 const save = async (business) => {
   if(business._id !== null || business._id !== undefined) {
@@ -33,6 +42,7 @@ module.exports = {
   findByName,
   findById,
   findAll,
+  findByCategoryAndStateAndLga,
   save,
   update
 };
