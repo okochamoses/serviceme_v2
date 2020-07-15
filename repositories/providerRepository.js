@@ -5,8 +5,18 @@ const findByPhone = async phone => {
   return provider;
 };
 
+// const findById = async id => {
+//   const provider = await (await Provider.findById(id).populate("businesses").exec());
+//   return provider;
+// };
+
 const findById = async id => {
-  const provider = await (await Provider.findById(id).populate("businesses").exec());
+  const provider = await Provider.findById(id).populate({
+    path : 'businesses',
+    populate : {
+      path : 'category'
+    }
+  }).exec()
   return provider;
 };
 
@@ -21,7 +31,7 @@ const findAll = async () => {
 };
 
 const save = async (provider) => {
-    const providerModel = new Provider(provider);
+  const providerModel = new Provider(provider);
   const savedProvider = await providerModel.save();
   return savedProvider;
 };

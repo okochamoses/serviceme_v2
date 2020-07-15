@@ -3,10 +3,10 @@ const locations = require("../util/states.json")
 
 exports.validateBusiness = (body) => {
     const { categoryId, stateCode, lga } = body;
-    if(stateCode !== undefined || !validator.isEmpty(stateCode)) {
+    if(stateCode !== undefined) {
         let s;
         locations.forEach(location => {
-            if(location === stateCode) {
+            if(location.code === stateCode) {
                 s = location.name;
             }
         })

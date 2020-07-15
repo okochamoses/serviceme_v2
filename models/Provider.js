@@ -10,9 +10,21 @@ const providerSchema = new mongoose.Schema({
       type: Boolean,
       default: true
     },
+    isProvider: {
+      type: Boolean,
+      default: false
+    },
     businesses: [{
         type: mongoose.Schema.ObjectId,
         ref: "businesses"
+    }],
+    favourites: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "providers"
+    }],
+    reviews: [{
+      type: mongoose.Schema.ObjectId,
+      ref: "reviews"
     }]
 })
 
