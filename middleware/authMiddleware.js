@@ -9,7 +9,7 @@ exports.processSessionToken = async (req, res, next) => {
         let token = req.get("Authorization");
         console.log(token)
 
-        if (token === undefined) {
+        if (token === undefined || token === "") {
             return res.json(new ServiceResponse(ResponseCode.AUTH_FAILURE, "Please pass a sessionId"))
         }
         token = token.replace("Bearer ", ""); // remove
