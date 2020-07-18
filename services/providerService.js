@@ -23,7 +23,7 @@ exports.addBusiness = async (req, res) => {
     try {
         // validate business request body
         const validationError = validateBusiness(req.body);
-        const { businessName, streetAddress, state, lga, landmark, providerId, categoryId } = req.body;
+        const { businessName, streetAddress, state, lga, landmark, providerId, categoryId, email, phone } = req.body;
         if (validationError) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, validationError))
         }
@@ -45,7 +45,7 @@ exports.addBusiness = async (req, res) => {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Please enter a valid category"));
         }
 
-        const business = { businessName, streetAddress, state, lga, landmark, category };
+        const business = { businessName, streetAddress, state, lga, landmark, category, email, phone };
 
         const savedBusiness = await businessRepository.save(business);
 

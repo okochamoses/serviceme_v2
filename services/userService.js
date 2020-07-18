@@ -39,7 +39,7 @@ exports.authenticateProvider = async (req, res) => {
 
 exports.registerProvider = async (req, res) => {
     try {
-        const { firstName, lastName, email, phone, password } = req.body;
+        const { firstName, lastName, email, phone, password, isProvider, subscribe } = req.body;
 
         const error = validateProviderRegistration(req.body);
         if (error) {
@@ -48,7 +48,7 @@ exports.registerProvider = async (req, res) => {
 
         const hashedPassword = encryption.hash(password);
         const provider = {
-            firstName, lastName, email, phone, password: hashedPassword
+            firstName, lastName, email, phone, password: hashedPassword, isProvider
         }
 
         const savedProvider = await providerRepository.save(provider);

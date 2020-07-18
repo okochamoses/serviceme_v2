@@ -1,11 +1,17 @@
 const validator = require("validator");
 
 exports.validateBusiness = (body) => {
-    const { businessName, streetAddress, state, lga, landmark, categoryId, providerId } = body;
+    const { businessName, streetAddress, state, lga, landmark, categoryId, providerId, email, phone } = body;
     if(businessName === undefined || validator.isEmpty(businessName)) {
         return "Please enter a valid business name"
     }
     if(streetAddress === undefined || validator.isEmpty(streetAddress)) {
+        return "Please enter a valid street address"
+    }
+    if(email === undefined || validator.isEmpty(email)) {
+        return "Please enter a valid street address"
+    }
+    if(phone === undefined || validator.isEmpty(phone)) {
         return "Please enter a valid street address"
     }
     if(state === undefined || validator.isEmpty(state)) {

@@ -7,6 +7,8 @@ const businessSchema = new mongoose.Schema({
     lga: String,
     landmark: String,
     description: String,
+    email: String,
+    phone: String,
     category: {
         type: mongoose.Schema.ObjectId,
         ref: "categories"
