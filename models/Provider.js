@@ -4,7 +4,7 @@ const providerSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     email: String,
-    phoneNumber: String,
+    phone: String,
     password: String,
     isActive: {
       type: Boolean,

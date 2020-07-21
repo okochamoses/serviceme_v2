@@ -27,10 +27,11 @@ exports.addBusiness = async (req, res) => {
         if (validationError) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, validationError))
         }
+
         // Check if user already has business name on platform
         const provider = await providerRepository.findById(providerId);
         if (provider === null) {
-            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Provider does not exist"));
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "User does not exist"));
         }
 
         provider.businesses.forEach(business => {

@@ -25,7 +25,7 @@ const findByCategoryAndStateAndLga = async (categoryId, state, lga) => {
 }
 
 const save = async (business) => {
-  if(business._id !== null || business._id !== undefined) {
+  if(business._id !== null && business._id !== undefined) {
     return await business.save();
   }
   const businessModel = new Business(business);

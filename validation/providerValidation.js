@@ -9,10 +9,10 @@ exports.validateBusiness = (body) => {
         return "Please enter a valid street address"
     }
     if(email === undefined || validator.isEmpty(email)) {
-        return "Please enter a valid street address"
+        return "Please enter a valid email"
     }
     if(phone === undefined || validator.isEmpty(phone)) {
-        return "Please enter a valid street address"
+        return "Please enter a phone number"
     }
     if(state === undefined || validator.isEmpty(state)) {
         return "Please enter a state"

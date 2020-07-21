@@ -39,11 +39,21 @@ exports.authenticateProvider = async (req, res) => {
 
 exports.registerProvider = async (req, res) => {
     try {
-        const { firstName, lastName, email, phone, password, isProvider, subscribe } = req.body;
+        const { firstName, lastName, email, phone, password, isProvider, subscribe, rememberMe } = req.body;
 
         const error = validateProviderRegistration(req.body);
         if (error) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, error))
+        }
+
+        // Get provider by email
+        let checkProvider = await providerRepository.findByEmail(email);
+        if (checkProvider !== null) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "A user with that email already exists"))
+        }
+        checkProvider = await providerRepository.findByPhone(phone);
+        if (checkProvider !== null) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "A user with that phone already exists"))
         }
 
         const hashedPassword = encryption.hash(password);
