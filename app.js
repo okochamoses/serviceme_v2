@@ -16,14 +16,15 @@ const providerRouter = require('./routes/provider');
 const locationRouter = require('./routes/locations');
 const categoryRouter = require('./routes/categories');
 const businessRouter = require('./routes/businesses');
+const visitorRouter = require('./routes/visitors');
 
 const {processSessionToken} = require("./middleware/authMiddleware")
 
 const app = express();
 
 app.use(morgan("combined", { stream: logger.stream }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -33,5 +34,6 @@ app.use('/api/v2/providers', providerRouter);
 app.use('/api/v2/locations', locationRouter);
 app.use('/api/v2/categories', categoryRouter);
 app.use('/api/v2/businesses', businessRouter);
+app.use('/api/v2/visitors', visitorRouter);
 
 module.exports = app;

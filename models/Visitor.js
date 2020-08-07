@@ -2,19 +2,18 @@ const mongoose = require("mongoose");
 
 const visitorSchema = new mongoose.Schema({
     ip: String,
-    time: String,
+    time: {
+        type: Date,
+        default: Date.now
+    },
     location: {
         stateCode: String,
         lga: String,
     },
-    business: {
-        type: mongoose.Schema.ObjectId,
-        ref: "businesses"
-    },
-    customer: {
-        type: mongoose.Schema.ObjectId,
-        ref: "customers"
-    },
+    latitude: String,
+    longitude: String,
+    business: String,
+    customer: String,
 })
 
 module.exports = mongoose.model("visitors", visitorSchema);

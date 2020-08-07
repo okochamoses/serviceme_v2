@@ -30,9 +30,11 @@ const generatePassword = () => {
 
 const generateToken = (data, type = null) => {
     const secret = (type === "admin" ? JWT_SECRET_ADMIN : JWT_SECRET) || "incredibleMagma";
-    const expiry = JWT_EXPIRY_TOKEN || 300;
+    const expiry = JWT_EXPIRY_TOKEN || 7890000;
 
-    return jwt.sign(data, secret);
+    console.log(expiry)
+
+    return jwt.sign(data, secret, {expiresIn: expiry});
 };
 
 const decodeToken = (token, type = null) => {

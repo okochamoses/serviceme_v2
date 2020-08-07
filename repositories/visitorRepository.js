@@ -29,10 +29,15 @@ const update = async (id, body) => {
   return visitor;
 };
 
+const findByCustomerAndBusiness = async (visitorId, businessId) => {
+  return await Visitor.findOne({business: businessId, customer: visitorId});
+}
+
 module.exports = {
   findByName,
   findById,
   findAll,
   save,
-  update
+  update,
+  findByCustomerAndBusiness
 };
