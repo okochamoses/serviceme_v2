@@ -9,7 +9,6 @@ const logger = require("../config/logger")
 
 exports.getProfile = async (req, res) => {
     try {
-        console.log(req.user)
         const provider = await providerRepository.findById(req.user.id);
         return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, provider))
     } catch (error) {
@@ -66,9 +65,11 @@ exports.updateBusiness = async (req, res) => {
     try {
         // const validationError = validateBusiness(req.body);
         // const {businessName, streetAddress, state, lga, landmark,providerId, categoryId} = req.body;
+
+        const id = req.user ? req.user.id : req.body.providerId
         const { businessId } = req.params;
 
-        const provider = await providerRepository.findById(req.user.id);
+        const provider = await providerRepository.findById(id);
         let isProviderBusiness = false;
         provider.businesses.forEach(business => {
             if (business.id === businessId) {
@@ -111,7 +112,7 @@ exports.updateProfile = async (req, res) => {
 
 exports.addImages = async (req, res) => {
     try {
-        const { image } = req.body;
+        const { images } = req.body;
         const { businessId } = req.params;
 
         // Validate business
@@ -120,19 +121,39 @@ exports.addImages = async (req, res) => {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Business does not exist"))
         }
 
-        const imageDetails = await imageService.uploadImage(image, "business"); // Store image to online db
+        const allImageDetails = await imageService.uploadImages(images); // Store image to online db
 
-        if (imageDetails.secure_url === undefined) {
-            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Oops! There was an error saving your image. Please try again"))
-        }
+        // if (imageDetails.secure_url === undefined) {
+        //     return res.json(new ServiceResponse(ResponseCode.FAILURE, "Oops! There was an error saving your image. Please try again"))
+        // }
 
-        business.images.push(imageDetails.secure_url);
+        const allImages = allImageDetails.map(i => i.secure_url)
+        // console.log(allImages)
+        // console.log(allImageDetails)
+
+        business.images = [...business.images, ...allImages];
+        console.log(business.images)
         const updatedBusiness = await businessRepository.save(business);
 
         return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedBusiness))
     } catch (error) {
         logger.error("An Error has occured: " + error.message);
         logger.error(error);
+        // console.log(error)
         return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
+    }
+}
+
+exports.requestHomeService = async (req, res) => {
+    try {
+        const {name, phone, address, providerId} = req;
+        
+        // Search for provider
+        const provider = await providerRepository.findById(req.user.id);
+        
+
+        // Send push notification to provider device using firebase
+    } catch (error) {
+        
     }
 }

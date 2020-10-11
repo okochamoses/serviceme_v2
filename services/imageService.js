@@ -46,19 +46,18 @@ exports.uploadImageToServer = async (base64Image, directory) => {
         require("fs").writeFile(`public/${directory}/${uniqueFilename}.${extension}`, data, 'base64', function(err) {
             console.log(err);
           });
-        return {secure_url: `http://localhost:8080/${directory}/${uniqueFilename}.${extension}`}
+        return {secure_url: `${IMAGE_DESTINATION}/${directory}/${uniqueFilename}.${extension}`}
     } catch (error) {
         logger.error("An Error has occured uploading the image: " + error.message);
         return null;
     }
-
 }
 
 exports.uploadImages = async (base64ImagesArray) => {
     let images = []
-    base64ImagesArray.forEach(async base64Image => {
-        await images.push(this.uploadImage(base64Image));
-    });
+    for (const base64Image of base64ImagesArray) {
+        await images.push( await this.uploadImage(base64Image, "business"));
+    };
 
-    return images;
+    return await images;
 }
