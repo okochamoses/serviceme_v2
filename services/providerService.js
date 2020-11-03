@@ -6,6 +6,7 @@ const imageService = require("./imageService")
 const ServiceResponse = require("../util/ServiceResponse")
 const { ResponseCode, ResponseMessage } = require("../util/Responses")
 const logger = require("../config/logger")
+const { sendMail } = require("../config/mailer")
 
 exports.getProfile = async (req, res) => {
     try {
@@ -66,10 +67,14 @@ exports.updateBusiness = async (req, res) => {
         // const validationError = validateBusiness(req.body);
         // const {businessName, streetAddress, state, lga, landmark,providerId, categoryId} = req.body;
 
+        console.log(req.user)
+        console.log(req.body)
+
         const id = req.user ? req.user.id : req.body.providerId
         const { businessId } = req.params;
 
         const provider = await providerRepository.findById(id);
+        console.log(provider, id)
         let isProviderBusiness = false;
         provider.businesses.forEach(business => {
             if (business.id === businessId) {
@@ -139,6 +144,29 @@ exports.addImages = async (req, res) => {
     } catch (error) {
         logger.error("An Error has occured: " + error.message);
         logger.error(error);
+        console.log(error)
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
+    }
+}
+
+exports.deleteImage = async (req, res) => {
+    try {
+        const { image } = req.body;
+        const { businessId } = req.params;
+
+        // Validate business
+        const business = await businessRepository.findById(businessId);
+        if (business === null) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Business does not exist"))
+        }
+
+        business.images = business.images.filter(img => image !== img);
+        const updatedBusiness = await businessRepository.save(business);
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedBusiness))
+    } catch (error) {
+        logger.error("An Error has occured: " + error.message);
+        logger.error(error);
         // console.log(error)
         return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
     }
@@ -146,14 +174,30 @@ exports.addImages = async (req, res) => {
 
 exports.requestHomeService = async (req, res) => {
     try {
-        const {name, phone, address, providerId} = req;
+        const {name, phone, address, businessId} = req.body;
+        console.log(name, phone, address, businessId)
+
         
         // Search for provider
-        const provider = await providerRepository.findById(req.user.id);
+        const provider = await providerRepository.findByBusinessId(businessId);
         
+        // Send push notification to provider device using firebase and email
+        sendMail(provider.email, "Home Service Request", 
+        `<p>Hi ${provider.firstName} ${provider.lastName},</p>
+        <p>A request has been made for your service on the serviceme.ng platform. Please find the details of the request below.</p>
+        
+        <p>Customer Name: ${name}<br>
+        Phone Number: ${phone}<br>
+        Address: ${address}</p>
+        
+        Endeavour to reach out to the customer to schedule a date/time to render your service and to get more information`
+        );
 
-        // Send push notification to provider device using firebase
+        // TODO: firebase push notification here
+
+        return new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS)
     } catch (error) {
-        
+        logger.error("An Error has occured: " + error.message);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
     }
 }

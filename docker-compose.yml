@@ -1,0 +1,3 @@
+servicemeapi:
+  image: serviceme_api
+  env_file: .env

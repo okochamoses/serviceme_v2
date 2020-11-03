@@ -41,11 +41,18 @@ const update = async (provider) => {
   return updatedProvider;
 };
 
+const findByBusinessId = async (businessId) => {
+  const provider = await Provider.findOne({businesses: businessId});
+
+  return provider;
+}
+
 module.exports = {
   findById,
   findByPhone,
   findByEmail,
   findAll,
   save,
-  update
+  update,
+  findByBusinessId
 };

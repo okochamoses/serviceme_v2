@@ -17,6 +17,7 @@ const locationRouter = require('./routes/locations');
 const categoryRouter = require('./routes/categories');
 const businessRouter = require('./routes/businesses');
 const visitorRouter = require('./routes/visitors');
+const requestRouter = require('./routes/requests');
 
 const {processSessionToken} = require("./middleware/authMiddleware")
 
@@ -35,5 +36,6 @@ app.use('/api/v2/locations', locationRouter);
 app.use('/api/v2/categories', categoryRouter);
 app.use('/api/v2/businesses', businessRouter);
 app.use('/api/v2/visitors', visitorRouter);
+app.use('/api/v2/requests', requestRouter);
 
 module.exports = app;
