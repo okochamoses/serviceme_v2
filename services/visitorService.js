@@ -9,12 +9,10 @@ exports.addNewVisitor = async (req, res) => {
     const { ip, businessId, customerId, longitude, latitude, deviceId } = req.body;
     const visitor = new Visitor({ ip, business: businessId, customer: customerId, deviceId, longitude, latitude });
     console.log(visitor);
-    if (!(await isNewVisitor(customerId, businessId))) {
+    if (!(await isNewVisitor(customerId, businessId, deviceId))) {
       return res.json(new ServiceResponse(ResponseCode.FAILURE, "Not a new visitor"));
     }
 
-    // const visitor = new Visitor({ ip, business: businessId, customerId: customerId, deviceId })
-    // console.log(visitor)
     visitorRepository.save(visitor);
 
     return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS));
@@ -25,15 +23,31 @@ exports.addNewVisitor = async (req, res) => {
   }
 };
 
-const isNewVisitor = async (visitorId, businessId) => {
-  const visitor = await visitorRepository.findByCustomerAndBusiness(visitorId, businessId);
+const isNewVisitor = async (visitorId, businessId, deviceId) => {
+  let visitor;
+  if(!deviceId) {
+    visitor = await visitorRepository.findByDeviceId(deviceId);
 
-  console.log(visitor)
-  if (visitor === null) {
-    return true;
+    console.log(visitor)
+    if (!visitor) {
+      return true;
+    }
+    if (visitor.time < new Date(new Date() - 30 * 60000)) {
+      return true;
+    }
+    return false;
   }
-  if (visitor.time < new Date(-30)) {
-    return true;
+
+  if(!businessId || !visitorId) {
+    visitor = await visitorRepository.findByCustomerAndBusiness(visitorId, businessId);
+
+    if (visitor === null) {
+      return true;
+    }
+    if (visitor.time < new Date(new Date() - 30 * 60000)) {
+      return true;
+    }
+    return false;
   }
 
   return false;

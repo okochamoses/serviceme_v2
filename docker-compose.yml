@@ -1,3 +1,43 @@
-servicemeapi:
-  image: serviceme_api
-  env_file: .env
+version: "3"
+services: 
+  servicemeapi:
+    image: serviceme_api
+    env_file: .env
+  db:
+    image: mongo:4.2.2
+    restart: always
+    volumes: 
+      - "./mongodata:/data/db"
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Fantastic88
+    ports: 
+      - "27019:27017"
+
+
+
+
+
+#   version: "3"
+# services: 
+#   servicemeapi:
+#     image: serviceme
+#     # env_file: .env
+#     environment: 
+#       - DB_HOST=db:27019&authSource=admin
+#       - DB_USER=admin
+#       - DB_PASS=Fantastic88
+#     depends_on: 
+#       - db
+#     ports: 
+#       - "5000:3000"
+#   db:
+#     image: mongo:4.2.2
+#     restart: always
+#     volumes: 
+#       - "./mongodata:/data/db"
+#     environment: 
+#       MONGO_INITDB_ROOT_USERNAME: root
+#       MONGO_INITDB_ROOT_PASSWORD: Fantastic88
+#     ports: 
+#       - "27019:27017"

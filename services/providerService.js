@@ -67,7 +67,7 @@ exports.updateBusiness = async (req, res) => {
         // const validationError = validateBusiness(req.body);
         // const {businessName, streetAddress, state, lga, landmark,providerId, categoryId} = req.body;
 
-        console.log(req.user)
+        console.log(req.params)
         console.log(req.body)
 
         const id = req.user ? req.user.id : req.body.providerId

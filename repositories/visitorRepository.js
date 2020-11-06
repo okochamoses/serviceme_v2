@@ -33,11 +33,21 @@ const findByCustomerAndBusiness = async (visitorId, businessId) => {
   return await Visitor.findOne({business: businessId, customer: visitorId});
 }
 
+const findByVisitorId = async (visitorId) => {
+  return await Visitor.findOne({customer: visitorId});
+}
+
+const findByDeviceId = async (deviceId) => {
+  return await Visitor.findOne({deviceId});
+}
+
 module.exports = {
   findByName,
   findById,
   findAll,
   save,
   update,
-  findByCustomerAndBusiness
+  findByCustomerAndBusiness,
+  findByVisitorId,
+  findByDeviceId
 };
