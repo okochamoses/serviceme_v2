@@ -1,4 +1,4 @@
-FROM node:12.19.0-alpine3.10 
+FROM node:12.19.0
 
 RUN mkdir -p /app/src
 
@@ -6,9 +6,11 @@ WORKDIR /app/src
 
 COPY package.json .
 
-RUN npm install
-
 COPY . .
+
+RUN rm -rf node_modules
+
+RUN npm install
 
 EXPOSE 3000
 

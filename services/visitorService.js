@@ -53,15 +53,33 @@ const isNewVisitor = async (visitorId, businessId, deviceId) => {
   return false;
 };
 
-exports.getVisitorsByDateRange = async (req, res) => {
+exports.getVisitorsByDateRangeAndBusinessId = async (req, res) => {
   try {
-    const { businessId, startDate, endDate } = req.body;
+    const { startDate, endDate } = req.body;
+    const {businessId} = req.params;
 
-    // const visitors = await visitorRepository.findByDateRange({ businessId, startDate, endDate });
+    const visitors = await visitorRepository.findByDateRangeAndBusinessId(startDate, endDate,  businessId );
 
     // console.log(visitors)
 
-    return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, businesses));
+    return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, visitors));
+  } catch (error) {
+    logger.error("An Error has occured: " + error.message);
+    return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR));
+  }
+};
+
+exports.getVisitorsByDateRange = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.body;
+    console.log(req.user)
+    const { email } = req.user;
+
+    const visitors = await visitorRepository.findByDateRangeAndUserId(startDate, endDate,  email );
+
+    console.log(visitors)
+
+    return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, visitors));
   } catch (error) {
     logger.error("An Error has occured: " + error.message);
     return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR));
