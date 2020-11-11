@@ -9,12 +9,10 @@ exports.addNewVisitor = async (req, res) => {
     const { ip, businessId, customerId, longitude, latitude, deviceId } = req.body;
     const visitor = new Visitor({ ip, business: businessId, customer: customerId, deviceId, longitude, latitude });
     console.log(visitor);
-    if (!(await isNewVisitor(customerId, businessId))) {
+    if (!(await isNewVisitor(customerId, businessId, deviceId))) {
       return res.json(new ServiceResponse(ResponseCode.FAILURE, "Not a new visitor"));
     }
 
-    // const visitor = new Visitor({ ip, business: businessId, customerId: customerId, deviceId })
-    // console.log(visitor)
     visitorRepository.save(visitor);
 
     return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS));
@@ -25,29 +23,63 @@ exports.addNewVisitor = async (req, res) => {
   }
 };
 
-const isNewVisitor = async (visitorId, businessId) => {
-  const visitor = await visitorRepository.findByCustomerAndBusiness(visitorId, businessId);
+const isNewVisitor = async (visitorId, businessId, deviceId) => {
+  let visitor;
+  if(!deviceId) {
+    visitor = await visitorRepository.findByDeviceId(deviceId);
 
-  console.log(visitor)
-  if (visitor === null) {
-    return true;
+    console.log(visitor)
+    if (!visitor) {
+      return true;
+    }
+    if (visitor.time < new Date(new Date() - 30 * 60000)) {
+      return true;
+    }
+    return false;
   }
-  if (visitor.time < new Date(-30)) {
-    return true;
+
+  if(!businessId || !visitorId) {
+    visitor = await visitorRepository.findByCustomerAndBusiness(visitorId, businessId);
+
+    if (visitor === null) {
+      return true;
+    }
+    if (visitor.time < new Date(new Date() - 30 * 60000)) {
+      return true;
+    }
+    return false;
   }
 
   return false;
 };
 
-exports.getVisitorsByDateRange = async (req, res) => {
+exports.getVisitorsByDateRangeAndBusinessId = async (req, res) => {
   try {
-    const { businessId, startDate, endDate } = req.body;
+    const { startDate, endDate } = req.body;
+    const {businessId} = req.params;
 
-    // const visitors = await visitorRepository.findByDateRange({ businessId, startDate, endDate });
+    const visitors = await visitorRepository.findByDateRangeAndBusinessId(startDate, endDate,  businessId );
 
     // console.log(visitors)
 
-    return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, businesses));
+    return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, visitors));
+  } catch (error) {
+    logger.error("An Error has occured: " + error.message);
+    return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR));
+  }
+};
+
+exports.getVisitorsByDateRange = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.body;
+    console.log(req.user)
+    const { email } = req.user;
+
+    const visitors = await visitorRepository.findByDateRangeAndUserId(startDate, endDate,  email );
+
+    console.log(visitors)
+
+    return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, visitors));
   } catch (error) {
     logger.error("An Error has occured: " + error.message);
     return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR));

@@ -20,9 +20,6 @@ exports.validateBusiness = (body) => {
     if(lga === undefined || validator.isEmpty(lga)) {
         return "Please enter a valid lga"
     }
-    if(landmark === undefined || validator.isEmpty(landmark)) {
-        return "Please enter a valid landmark"
-    }
     if(categoryId === undefined || !validator.isMongoId(categoryId)) {
         return "Please select a category"
     }

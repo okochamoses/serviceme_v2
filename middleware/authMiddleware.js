@@ -14,6 +14,7 @@ exports.processSessionToken = async (req, res, next) => {
         }
         token = token.replace("Bearer ", ""); // remove
         const decoded = encryptionService.decodeToken(token);
+        console.log(decoded)
 
         if (typeof decoded !== "string") {
             const session = await sessionRepository.findById(token);
