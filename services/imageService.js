@@ -1,5 +1,5 @@
 const cloudinary = require("cloudinary")
-import { v4 as uuidv4 } from 'uuid';
+const uuidv4 = require("uuid").v4
 const { CLOUD_NAME, CLOUD_API_KEY, CLOUD_API_SECRET, IMAGE_DESTINATION } = require("../config/keys")
 const logger = require("../config/logger")
 
