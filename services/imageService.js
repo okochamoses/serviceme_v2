@@ -1,4 +1,5 @@
 const cloudinary = require("cloudinary")
+import { v4 as uuidv4 } from 'uuid';
 const { CLOUD_NAME, CLOUD_API_KEY, CLOUD_API_SECRET, IMAGE_DESTINATION } = require("../config/keys")
 const logger = require("../config/logger")
 
@@ -43,11 +44,11 @@ exports.uploadImageToServer = async (base64Image, directory) => {
     const extension = base64Image.split(";base64")[0].split("/")[1];
 
     try {
-        console.log("YAYYSHKIN")
-        require("fs").writeFile(`public/${directory}/${uniqueFilename}.${extension}`, data, 'base64', function(err) {
+        const randomStr = uuidv4();
+        require("fs").writeFile(`public/${directory}/${uniqueFilename}-${randomStr}.${extension}`, data, 'base64', function(err) {
             console.log(err);
           });
-        return {secure_url: `${IMAGE_DESTINATION}/${directory}/${uniqueFilename}.${extension}`}
+        return {secure_url: `${IMAGE_DESTINATION}/${directory}/${uniqueFilename}-${randomStr}.${extension}`}
     } catch (error) {
         logger.error("An Error has occured uploading the image: " + error.message);
         return null;

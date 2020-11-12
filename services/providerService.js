@@ -8,6 +8,7 @@ const { ResponseCode, ResponseMessage } = require("../util/Responses")
 const logger = require("../config/logger")
 const { sendMail } = require("../config/mailer")
 const sendSMS = require("../config/sms")
+const mailer = require("../config/mailer")
 
 exports.getProfile = async (req, res) => {
     try {
@@ -188,7 +189,7 @@ exports.requestHomeService = async (req, res) => {
         
         // Send push notification to provider device using firebase and email
         sendMail(provider.email, "Home Service Request", 
-        `<p>Hi ${provider.firstName} ${provider.lastName},</p>
+        `<p>Hi ${provider.firstName},</p>
         <p>A request has been made for your service on the serviceme.ng platform. Please find the details of the request below.</p>
         
         <p>Customer Name: ${name}<br>
@@ -205,8 +206,46 @@ exports.requestHomeService = async (req, res) => {
         Phone: ${phone}\n
         Request brief: ${request}\n
         Address: ${address}`;
-        // sendSMS(provider.phone, smsMessage)
-        console.log(provider.phone, smsMessage)
+        sendSMS(provider.phone, smsMessage);
+        console.log(provider.phone, smsMessage);
+
+        // TODO: firebase push notification here
+
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS))
+    } catch (error) {
+        logger.error("An Error has occured: " + error.message);
+        return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
+    }
+}
+
+exports.requestOnPremiseService = async (req, res) => {
+    try {
+        const {name, phone, businessId, request} = req.body;
+        
+        // Search for provider
+        const provider = await providerRepository.findByBusinessId(businessId);
+        
+        // Send push notification to provider device using firebase and email
+        sendMail(provider.email, "On Premise Service Request", 
+        `<p>Hi ${provider.firstName},</p>
+        <p>A request has been made for your service on the serviceme.ng platform. Please find the details of the request below.</p>
+        
+        <p>Customer Name: ${name}<br>
+        Phone Number: ${phone}<br>
+        Request Brief: ${request}<br>
+        
+        Endeavour to reach out to the customer to schedule a date/time to render your service and to get more information`
+        );
+        // Email send
+
+        // Send SMS
+        const smsMessage = `You have a new on-premise request: \n
+        Name: ${name}\n
+        Phone: ${phone}\n
+        Request brief: ${request}`;
+        sendSMS(provider.phone, smsMessage);
+        console.log(provider.phone, smsMessage);
 
         // TODO: firebase push notification here
 
