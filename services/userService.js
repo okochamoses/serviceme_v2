@@ -17,7 +17,12 @@ exports.authenticateProvider = async (req, res) => {
         }
 
         // Get provider by email
-        const provider = await providerRepository.findByEmail(email);
+        let provider;
+        if(email.includes("@")) {
+            provider = await providerRepository.findByEmail(email);
+        } else {
+            provider = await providerRepository.findByPhone(email);
+        }
         if (provider === null) {
             return res.json(new ServiceResponse(ResponseCode.AUTH_FAILURE, "Authentication failed"))
         }
@@ -130,7 +135,6 @@ exports.customerLogin = async (req, res) => {
         } else {
             customer = await customerRepository.findByPhone(loginId);
         }
-        console.log(customer)
 
         if (customer === null) {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Invalid login ID / password combination"))

@@ -43,6 +43,7 @@ exports.uploadImageToServer = async (base64Image, directory) => {
     const extension = base64Image.split(";base64")[0].split("/")[1];
 
     try {
+        console.log("YAYYSHKIN")
         require("fs").writeFile(`public/${directory}/${uniqueFilename}.${extension}`, data, 'base64', function(err) {
             console.log(err);
           });

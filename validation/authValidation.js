@@ -51,8 +51,8 @@ exports.validateCustomerRegistration = (body) => {
 exports.validateProviderLogin = (body) => {
     const { email, password } = body;
     
-    if(email === undefined || !validator.isEmail(email)) {
-        return "Please enter a valid email"
+    if(email === undefined || (!validator.isEmail(email) && !validator.isMobilePhone(email, "en-NG"))) {
+        return "Please enter a valid email or phone number"
     }
 
     if(password === undefined || validator.isEmpty(password)) {

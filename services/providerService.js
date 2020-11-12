@@ -7,6 +7,7 @@ const ServiceResponse = require("../util/ServiceResponse")
 const { ResponseCode, ResponseMessage } = require("../util/Responses")
 const logger = require("../config/logger")
 const { sendMail } = require("../config/mailer")
+const sendSMS = require("../config/sms")
 
 exports.getProfile = async (req, res) => {
     try {
@@ -67,7 +68,7 @@ exports.updateBusiness = async (req, res) => {
         // const validationError = validateBusiness(req.body);
         // const {businessName, streetAddress, state, lga, landmark,providerId, categoryId} = req.body;
 
-        console.log(req.params)
+        console.log(req.user)
         console.log(req.body)
 
         const id = req.user ? req.user.id : req.body.providerId
@@ -152,6 +153,7 @@ exports.addImages = async (req, res) => {
 exports.deleteImage = async (req, res) => {
     try {
         const { image } = req.body;
+        console.log("MIMIMIMIMIMIMIMI", req.body)
         const { businessId } = req.params;
 
         // Validate business
@@ -160,8 +162,11 @@ exports.deleteImage = async (req, res) => {
             return res.json(new ServiceResponse(ResponseCode.FAILURE, "Business does not exist"))
         }
 
-        business.images = business.images.filter(img => image !== img);
-        const updatedBusiness = await businessRepository.save(business);
+        console.log(business.images.length)
+        console.log(image)
+        let x = business.images.filter(img => image !== img);
+        console.log(business.images.length)
+        const updatedBusiness = await businessRepository.update(business.id, {images: x});
 
         return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, updatedBusiness))
     } catch (error) {
@@ -174,7 +179,7 @@ exports.deleteImage = async (req, res) => {
 
 exports.requestHomeService = async (req, res) => {
     try {
-        const {name, phone, address, businessId} = req.body;
+        const {name, phone, address, businessId, request} = req.body;
         console.log(name, phone, address, businessId)
 
         
@@ -188,14 +193,25 @@ exports.requestHomeService = async (req, res) => {
         
         <p>Customer Name: ${name}<br>
         Phone Number: ${phone}<br>
+        Request Brief: ${request}<br>
         Address: ${address}</p>
         
         Endeavour to reach out to the customer to schedule a date/time to render your service and to get more information`
         );
 
+        // Send SMS
+        const smsMessage = `You have a new request: \n
+        Name: ${name}\n
+        Phone: ${phone}\n
+        Request brief: ${request}\n
+        Address: ${address}`;
+        // sendSMS(provider.phone, smsMessage)
+        console.log(provider.phone, smsMessage)
+
         // TODO: firebase push notification here
 
-        return new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS)
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS))
     } catch (error) {
         logger.error("An Error has occured: " + error.message);
         return res.json(new ServiceResponse(ResponseCode.ERROR, ResponseMessage.ERROR))
