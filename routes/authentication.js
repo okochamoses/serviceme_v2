@@ -5,6 +5,9 @@ const {processSessionToken} = require("../middleware/authMiddleware")
 router.post("/provider/login", userService.authenticateProvider);
 router.post("/provider/register", userService.registerProvider);
 router.post("/provider/change-password", processSessionToken, userService.changeProviderPassword);
+router.post("/provider/forgot-password", userService.initiateForgotPassword);
+router.post("/provider/verify-password", userService.verifyOtp);
+router.post("/provider/complete-forgot-password", userService.completePasswordReset);
 router.post("/provider/logout", userService.logout);
 
 router.post("/customer/login", userService.customerLogin);

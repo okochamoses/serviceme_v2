@@ -1,11 +1,15 @@
 const providerRepository = require("../repositories/providerRepository");
 const sessionRepository = require("../repositories/sessionRepository")
 const logger = require("../config/logger")
+const mailer = require("../config/mailer")
 const encryption = require("../util/hashing")
 const ServiceResponse = require("../util/ServiceResponse")
 const { ResponseCode, ResponseMessage } = require("../util/Responses")
 const { validateProviderRegistration, validateProviderLogin, validateCustomerRegistration } = require("../validation/authValidation");
 const customerRepository = require("../repositories/customerRepository");
+const passwordResetRepository = require("../repositories/passwordResetRepository");
+const PasswordReset = require("../models/PasswordReset");
+const { PASSWORD_RESET_TIMEOUT } = require("../config/keys");
 
 exports.authenticateProvider = async (req, res) => {
     try {
@@ -76,7 +80,6 @@ exports.registerProvider = async (req, res) => {
 exports.changeProviderPassword = async (req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
-        console.log(req.user)
         const { email } = req.user;
         const provider = await providerRepository.findByEmail(email);
         if (provider === null) {
@@ -163,5 +166,91 @@ exports.logout = async (req, res) => {
         return res.json({ message: "Implementation not done" })
     } catch (error) {
         logger.error(error.message)
+    }
+}
+
+// export const initiateForgotPassword = async(email) => {
+//     export const verifyOtp = async(email, otp, token) => {
+//     export const completePasswordReset = async(password, confirmPassword, token) => {
+
+exports.initiateForgotPassword = async(req, res) => {
+    try {
+        const { email } = req.body;
+        const passwordReset = new PasswordReset();
+        passwordReset.email = email
+
+        const saved = await passwordResetRepository.save(passwordReset);
+
+        mailer.sendMail(email, "Password Reset", `
+        <p>Hi,</p>
+        <h3>${saved.otp}</h3>
+        <p>A password reset has been initiated on your account. Please use this otp to verify your password reset.</p>
+        <p>Ignore this email if the password reset was not initiated by you</p>
+        `)
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, {email: saved.email, token: saved.token, timeout: PASSWORD_RESET_TIMEOUT}))
+    } catch (error) {
+        console.log(error)
+        return res.json(new ServiceResponse(ResponseCode.FAILURE, ResponseMessage.FAILURE));
+    }
+}
+
+exports.verifyOtp = async(req, res) => {
+    try {
+        const { email, otp, token } = req.body;
+
+        const passwordReset = await passwordResetRepository.findByEmail(email);
+
+        console.log(passwordReset)
+        if(!passwordReset) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Invalid email"));
+        }
+
+        if(passwordReset.expiresIn < new Date()) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "OTP has expired"));
+        }
+
+        if(passwordReset && passwordReset.token === token) {
+            if(passwordReset.otp === otp) {
+                await passwordReset.update({otpVerified: true})
+                return res.json(new ServiceResponse(ResponseCode.SUCCESS, "OTP Verified", {email: passwordReset.email, otp: passwordReset.otp, token: passwordReset.token,}))
+            }
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "OTP verification failed"));
+        } else {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Invalid token"));
+        }
+    } catch (error) {
+        console.log(error)
+        return res.json(new ServiceResponse(ResponseCode.FAILURE, ResponseMessage.FAILURE));
+    }
+}
+
+exports.completePasswordReset = async(req, res) => {
+    try {
+        const { password: newPassword, confirmPassword, token } = req.body;
+
+        if(newPassword !== confirmPassword) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Passwords do not match"))
+        }
+
+        const pass = await passwordResetRepository.findByToken(token);
+        console.log(pass)
+        if(!pass) {
+            return res.json(new ServiceResponse(ResponseCode.FAILURE, "Invalid Token"))
+        }
+        
+        const email = pass.email;
+        const provider = await providerRepository.findByEmail(email);
+
+        const password = encryption.hash(confirmPassword);
+        provider.password = password;
+        const updatedProvider = await providerRepository.update(provider);
+        
+        await passwordResetRepository.completed(pass)
+
+        return res.json(new ServiceResponse(ResponseCode.SUCCESS, "Your password has been changed successfully"))
+    } catch (error) {
+        console.log(error)
+        return res.json(new ServiceResponse(ResponseCode.FAILURE, ResponseMessage.FAILURE));
     }
 }
